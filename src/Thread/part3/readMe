@@ -1,0 +1,35 @@
+本包内主要讲解的是thread的api说明
+1.thread的命名规则
+    Thread();(构造函数)
+    创建线程对象默认有一个线程名，以thread-开头，从0开始计数
+    thread-0  thread-1 thread-2...
+
+2.如果在构造Thread的时候没有传递Runnable或者没有复写Thread的run方法，则该Thread将不会调用任何东西，
+  如果传递了Runnable接口的实例，或者复写了Thread的run方法，则会执行该方法的逻辑单元（逻辑代码）。
+
+  //构造函数
+  Thread()
+  分配一个新的 Thread对象。
+  Thread(Runnable target)
+  分配一个新的 Thread对象。
+  Thread(Runnable target, String name)
+  分配一个新的 Thread对象。
+  Thread(String name)
+  分配一个新的 Thread对象。
+
+3.如果构造线程对象时，未传入ThreadGroup，Thread会默认获取父线程的ThreadGroup作为该线程的ThreadGroup，
+  此时子线程和父线程在同一个ThreadGroup中（见实例四，实例5）
+
+
+
+Thread(ThreadGroup group, Runnable target)
+分配一个新的 Thread对象。
+Thread(ThreadGroup group, Runnable target, String name)
+分配一个新的 Thread对象，使其具有 target作为其运行对象，具有指定的 name作为其名称，属于 group引用的线程组。
+Thread(ThreadGroup group, Runnable target, String name, long stackSize)
+分配一个新的 Thread对象，以便它具有 target作为其运行对象，将指定的 name正如其名，以及属于该线程组由称作 group ，并具有指定的 堆栈大小 。
+Thread(ThreadGroup group, String name)
+分配一个新的 Thread对象。
+
+4.构造Thread的时候传入stacksize代表该线程占用的stack的大小，如果没有指定stacksize
+  的大小，默认是0,0代表会忽略该参数，该参数会被JVM的JNI函数去使用，需要注意：该参数在一些平台有效，在有些平台则无效。

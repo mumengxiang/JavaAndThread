@@ -1,0 +1,14 @@
+1.join 方法的使用
+    void join()
+    等待这个线程死亡。
+    void join(long millis)
+    等待这个线程死亡最多 millis毫秒。
+    void join(long millis, int nanos)
+    等待最多 millis毫秒加上 nanos纳秒这个线程死亡。
+2.interrupt 方法的使用
+    void           interrupt()
+    中断这个线程。
+    static boolean interrupted()
+    测试当前线程是否中断。
+    boolean isInterrupted()
+    测试这个线程是否被中断。

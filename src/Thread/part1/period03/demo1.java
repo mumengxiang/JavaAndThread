@@ -16,6 +16,7 @@ public class demo1 {
 
     }
 
+
     public static void sayhello(){
         for (int i=0;i<10000;i++){
             System.out.println("第"+i+"个sayhello()");

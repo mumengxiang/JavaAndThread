@@ -2,6 +2,10 @@ package Thread.part5;
 
 import java.util.stream.IntStream;
 
+
+/**
+ * 当前线程等待子线程运行结束
+ */
 public class ThreadJoin {
     public static void main(String[] args) throws Exception{
         //开启一个线程
@@ -15,8 +19,7 @@ public class ThreadJoin {
         });
         t.start();
         t1.start();
-        //如果没有join，两者会交替，如果有join则会执行完t线程再执行主线程
-        //注意 join的坐标对象是主线程，所有t1和t有交互
+        //注意 join的坐标对象是主线程，所有t1和t有交互，但是两个线程之后的代码会在两个线程执行完成之后再执行。
         t.join();
         //  t.join(100,120);毫秒  纳秒
         t1.join();

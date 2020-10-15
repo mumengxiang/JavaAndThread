@@ -49,7 +49,6 @@ public class ThreadService {
                 executeThread.interrupt();
                 break;
             }
-
             //这里在while循环里，此时表示线程没有执行结束同时也没超时，这里短暂的休眠一下，这里休眠的
             //目的是让那些执行时间小于mills的任务可以结束
             try {

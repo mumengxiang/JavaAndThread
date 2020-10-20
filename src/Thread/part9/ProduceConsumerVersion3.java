@@ -1,9 +1,12 @@
 package Thread.part9;
 
+import java.util.stream.Stream;
+
 /**
- * 第24讲
+ * 第25讲 多生产 多消费的情形
+ * 多个生产者和消费者因为notify方法是随机唤醒的，所有这里会发生所有的线程放弃cpu执行权的情况，会卡住。
  */
-public class ProduceConsumerVersion2 {
+public class ProduceConsumerVersion3 {
 
     //定义商品
     private int i = 0;
@@ -53,8 +56,10 @@ public class ProduceConsumerVersion2 {
     }
 
     public static void main(String[] args) {
-        ProduceConsumerVersion2 produceConsumerVersion2 = new ProduceConsumerVersion2();
+        ProduceConsumerVersion3 produceConsumerVersion2 = new ProduceConsumerVersion3();
 
+        //多个消费者 lamdba表达式
+        Stream.of("P1","P2").forEach( n ->
         new Thread(){
             @Override
             public void run() {
@@ -66,8 +71,11 @@ public class ProduceConsumerVersion2 {
                     }
                 }
             }
-        }.start();
+        }.start()
+        );
 
+        //多个S生产者 lamdba表达式
+        Stream.of("C1","C2").forEach( n ->
         new Thread(){
             @Override
             public void run() {
@@ -79,6 +87,7 @@ public class ProduceConsumerVersion2 {
                     }
                 }
             }
-        }.start();
+        }.start()
+        );
     }
 }

@@ -19,13 +19,18 @@ public class LockTest {
                             //定义线程需要做的事
                             try {
                                 //首先线程上锁
-                                booleanLock.lock();
+//                                booleanLock.lock();
+                                //让锁具备超时功能
+                                booleanLock.lock(10L);
                                 //定义log
                                 Optional.of(Thread.currentThread().getName()+"已经上锁").ifPresent(System.out::println);
                                 //然后开始工作
                                 work();
-                            }catch (Exception e){
+                            }catch (InterruptedException e){
                                 e.printStackTrace();
+                            }catch (Lock.TimeOutException e){
+                                //定义log
+                                Optional.of(Thread.currentThread().getName()+"已经超时").ifPresent(System.out::println);
                             }
                             finally {
                                 //最后释放锁
@@ -33,9 +38,9 @@ public class LockTest {
                             }
                         }, name).start()
                 );
-
-        Thread.sleep(100);
-        booleanLock.unlock();
+//这里是为了验证自己上的锁只有自己才能解锁
+//        Thread.sleep(100);
+//        booleanLock.unlock();
     }
 
 
@@ -47,7 +52,7 @@ public class LockTest {
         //定义log
         Optional.of(Thread.currentThread().getName()+"正在工作").ifPresent(System.out::println);
         //这里工作是睡眠10s
-        Thread.sleep(10_000);
+        Thread.sleep(40_000);
 
     }
 }

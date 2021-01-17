@@ -1,0 +1,53 @@
+1.本章讲解线程之间的通讯。
+   典型：生产者消费者问题
+ 使用wait() 和notify()方法实现
+
+
+ wait（）：wait释放锁
+ public final void wait() throws InterruptedException
+ 在其他线程调用此对象的 notify() 方法或 notifyAll() 方法前，导致当前线程等待。换句话说，此方法的行为就好像它仅执行 wait(0) 调用一样。
+ 当前线程必须拥有此对象监视器。该线程放弃对此监视器的所有权并等待，直到其他线程通过调用 notify 方法，或 notifyAll 方法通知在此对象的监视器上等待的线程醒来。然后该线程将等到重新获得对监视器的所有权后才能继续执行。
+
+
+ notify（）：
+ public final void notify()
+ 唤醒在此对象监视器上等待的单个线程。如果所有线程都在此对象上等待，则会选择唤醒其中一个线程。选择是任意性的，并在对实现做出决定时发生。线程通过调用其中一个 wait 方法，在对象的监视器上等待。
+ 直到当前线程放弃此对象上的锁定，才能继续执行被唤醒的线程。被唤醒的线程将以常规方式与在该对象上主动同步的其他所有线程进行竞争；例如，唤醒的线程在作为锁定此对象的下一个线程方面没有可靠的特权或劣势。
+
+
+
+2.sleep和wait的区别
+  （1）sleep是Thread的方法，wait是Object的方法
+  （2）sleep不会释放锁，wait会释放锁， 进入等待此对象的等待锁定池，只有针对此对象调用notify()方法后本线程才进入对象锁定池准备
+  （3）使用sleep不需要定义synchronized方法，而使用wait需要，并且wait还需要依赖monitor。
+       见DifferenceWaitAndSleep类
+  （4）sleep方法不需要被唤醒，而使用wait需要
+
+  注：定义锁的时候尽量定位为final类型的
+  final private static Object Lock = new Object();
+
+
+
+  /////////////////////////////////////////////////
+  疑问一：为什么 wait 前必须加 synchronized 同步
+
+  答: 线程执行lock.wait()方法时，当前线程必须持有该lock对象的monitor，这是jvm层要求，如果wait方法在synchronized代码中执行，该线程已经获取synchronized的锁，从而持有了lock对象的monitor。 monitor是jvm层表述每个对象实例的一个flag，每个对象的对象头信息中都有这样一个flag。
+
+  简单说：wait会释放当前线程的对象锁，既然是要释放锁，那就必须先获取锁，而 synchronized 就是同步锁，线程能执行同步代码块，则必须获得synchronized的锁。
+
+  因此：waite()和notify()因为会对对象的“锁标志”进行操作，所以它们必须在 synchronized函数 或 synchronized代码块 中进行调用。如果在 non-synchronized函数 或 non-synchronized代码块 中进行调用，虽然能编译通过，但在运行时会发生IllegalMonitorStateException的异常。
+
+
+  疑问二：为什么 notify 前必须加 synchronized同步
+
+  个人理解:  wait释放了锁后被阻塞，notify用于唤醒被wait阻塞的线程，并让出锁给wait所在的线程。 既然notify要让出锁，那notify必然先获得锁，不然拿什么让给wait线程呢？
+
+         obj.notify()：该方法的调用，会从所有正在等待obj对象锁的线程中，唤醒其中的一个（选择算法依赖于不同实现），被唤醒的线程此时加入到了obj对象锁的争夺之中。
+
+          注意： 然而该notify方法的执行线程在 调用  lock.notify() 时并未立即释放obj的对象锁，毕竟这段代码还是执行在 synchronized同步代码中的 。  实际上释放动作是在执行完 lock.notify后并且离开synchronized代码块时释放锁的。  因此在notify方法之后，synchronized代码块结束之前，所有其他被唤醒的，等待obj对象锁的线程依旧被阻塞。
+
+
+
+  疑问三：线程A获取了synchronized锁，执行wait方法并挂起，线程B又如何再次获取锁？
+
+  答：线程A 在 执行lock.wait() 时，会阻塞线程A，同时立即释放 lock锁， 这样 线程B 才能再次获取 lock对象锁。

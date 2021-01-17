@@ -1,0 +1,7 @@
+采用优雅的方式结束线程生命周期
+1. 使用开关的方式关闭线程  ThreadCloseGraceful
+
+2. 使用interrupt方法退出 ThreadCloseGraceful2
+
+3. 当线程中的操作例如通讯，读文件block住了，此时无法读到开关也无法打断，此时就需要强制关闭线程
+   ThreadCloseForce包

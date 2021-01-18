@@ -24,4 +24,9 @@ public class User {
      */
     @Column(name = "PASSWORD")
     private String password;
+    /**
+     * 授权码
+     */
+    @Column(name = "PERMS")
+    private String perms;
 }

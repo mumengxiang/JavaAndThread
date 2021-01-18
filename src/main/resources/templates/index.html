@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,7 +8,12 @@
 <body>
 <h3 th:text="${name}"></h3>
 <hr/>
-用户登录：<a href="/add">用户登录</a><br/>
-用户更新：<a href="/update">用户更新</a>
+<div shiro:hasPermission="user:add">
+    用户登录：<a href="/add">用户登录</a>
+</div>
+<br/>
+<div shiro:hasPermission="user:update">
+    用户更新：<a href="/update">用户更新</a>
+</div>
 </body>
 </html>

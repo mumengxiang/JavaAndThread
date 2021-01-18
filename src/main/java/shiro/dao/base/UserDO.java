@@ -12,4 +12,7 @@ public interface UserDO {
 
     @Select("select * from user where username='${inName}' ")
     List<User> getPwdByName(@Param("inName") String inName);
+
+    @Select("select * from user where ID='${id}' ")
+    User getPwdById(@Param("id") String id);
 }

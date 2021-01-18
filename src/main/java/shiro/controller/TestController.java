@@ -53,6 +53,15 @@ public class TestController {
         return "login";
     }
 
+    /**
+     * 设置未授权的页面
+     * @return
+     */
+    @RequestMapping("/unAuth")
+    public String unAuth(){
+        return "unAuth";
+    }
+
 
 
     /**

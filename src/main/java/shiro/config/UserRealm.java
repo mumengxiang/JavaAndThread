@@ -1,7 +1,9 @@
 package shiro.config;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import shiro.dao.base.UserDO;
@@ -26,7 +28,17 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.println("执行授权逻辑");
-        return null;
+
+        //给资源进行授权
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        //添加资源的授权字符串
+        //得到登录对象
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        //数据库查询结果
+        User realUser = userDO.getPwdById(user.getId());
+        //设置权限对象
+        info.addStringPermission(realUser.getPerms());
+        return info;
     }
 
     /**
@@ -48,10 +60,15 @@ public class UserRealm extends AuthorizingRealm {
             //得到密码
             String pwd = userList.get(0).getPassword();
             //验证密码(第二个参数为数据库里面的密码)
-            return new SimpleAuthenticationInfo("",pwd,"");
+            return new SimpleAuthenticationInfo(userList.get(0),pwd,"");
         }else {
             return null;
         }
 
     }
+
 }
+
+
+
+
